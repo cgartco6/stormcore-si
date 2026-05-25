@@ -1,49 +1,439 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>StormCore SI</title>
-  <style>
-    body {
-      background: #0d1117;
-      color: white;
-      font-family: Arial;
-      padding: 40px;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StormCore SI</title>
 
-    input, button {
-      padding: 12px;
-      width: 400px;
-      margin-top: 10px;
-    }
-  </style>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #0b0f17;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    overflow-x: hidden;
+}
+
+header {
+    background: #111827;
+    padding: 20px;
+    border-bottom: 1px solid #1f2937;
+}
+
+header h1 {
+    font-size: 28px;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    min-height: 100vh;
+}
+
+.sidebar {
+    background: #111827;
+    padding: 20px;
+    border-right: 1px solid #1f2937;
+}
+
+.sidebar h2 {
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+.sidebar button {
+    width: 100%;
+    margin-bottom: 12px;
+    padding: 12px;
+    border: none;
+    background: #2563eb;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.sidebar button:hover {
+    background: #1d4ed8;
+}
+
+.main {
+    padding: 25px;
+}
+
+.panel {
+    background: #111827;
+    border: 1px solid #1f2937;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.panel h3 {
+    margin-bottom: 15px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.input-group input,
+.input-group textarea,
+.input-group select {
+    width: 100%;
+    padding: 12px;
+    background: #0b1220;
+    border: 1px solid #374151;
+    color: white;
+    border-radius: 8px;
+}
+
+textarea {
+    min-height: 120px;
+}
+
+.action-btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    background: #10b981;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.action-btn:hover {
+    background: #059669;
+}
+
+.log-window {
+    background: #000000;
+    border-radius: 8px;
+    padding: 15px;
+    height: 300px;
+    overflow-y: auto;
+    font-family: monospace;
+    white-space: pre-wrap;
+}
+
+.status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.status-card {
+    background: #0b1220;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #1f2937;
+}
+
+.chat-box {
+    background: #0b1220;
+    border-radius: 10px;
+    padding: 15px;
+    height: 300px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+
+.chat-message {
+    margin-bottom: 12px;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.user-message {
+    background: #1e3a8a;
+}
+
+.ai-message {
+    background: #065f46;
+}
+
+.footer {
+    text-align: center;
+    padding: 20px;
+    color: #9ca3af;
+}
+</style>
 </head>
 <body>
-  <h1>StormCore SI Builder</h1>
 
-  <input id="repo" placeholder="GitHub Repository Path">
+<header>
+    <h1>StormCore SI Autonomous Swarm Platform</h1>
+</header>
 
-  <br>
+<div class="container">
 
-  <button onclick="runBuild()">Complete Repository</button>
+    <div class="sidebar">
+        <h2>Modules</h2>
 
-  <pre id="output"></pre>
+        <button onclick="switchPanel('dashboard')">Dashboard</button>
+        <button onclick="switchPanel('repository')">Repository Builder</button>
+        <button onclick="switchPanel('chat')">AI Chat</button>
+        <button onclick="switchPanel('validators')">Validators</button>
+        <button onclick="switchPanel('memory')">Long Memory</button>
+        <button onclick="switchPanel('swarm')">Swarm Monitor</button>
+        <button onclick="switchPanel('deploy')">Deployment</button>
+    </div>
 
-  <script>
-    async function runBuild() {
-      const repo = document.getElementById('repo').value;
+    <div class="main">
 
-      const response = await fetch('http://localhost:8000/complete', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ repo_path: repo })
-      });
+        <div id="dashboard" class="panel">
+            <h3>System Dashboard</h3>
 
-      const data = await response.json();
+            <div class="status-grid">
+                <div class="status-card">
+                    <h4>Swarm Status</h4>
+                    <p id="swarmStatus">ONLINE</p>
+                </div>
 
-      document.getElementById('output').innerText = JSON.stringify(data, null, 2);
+                <div class="status-card">
+                    <h4>Memory Core</h4>
+                    <p>ACTIVE</p>
+                </div>
+
+                <div class="status-card">
+                    <h4>Validators</h4>
+                    <p>READY</p>
+                </div>
+
+                <div class="status-card">
+                    <h4>Repair Engine</h4>
+                    <p>READY</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="repository" class="panel" style="display:none;">
+            <h3>Repository Completion Engine</h3>
+
+            <div class="input-group">
+                <label>GitHub Repository URL</label>
+                <input type="text" id="repoUrl" placeholder="https://github.com/user/repo">
+            </div>
+
+            <div class="input-group">
+                <label>Mission Objective</label>
+                <textarea id="objective">Complete, repair, validate, optimize and finish this repository.</textarea>
+            </div>
+
+            <button class="action-btn" onclick="startRepositoryCompletion()">
+                Start Autonomous Build
+            </button>
+
+            <br><br>
+
+            <div class="log-window" id="buildLogs"></div>
+        </div>
+
+        <div id="chat" class="panel" style="display:none;">
+            <h3>StormCore AI Chat</h3>
+
+            <div class="chat-box" id="chatBox"></div>
+
+            <div class="input-group">
+                <input type="text" id="chatInput" placeholder="Ask StormCore anything...">
+            </div>
+
+            <button class="action-btn" onclick="sendMessage()">
+                Send Message
+            </button>
+        </div>
+
+        <div id="validators" class="panel" style="display:none;">
+            <h3>Validation Engines</h3>
+
+            <div class="status-grid">
+                <div class="status-card">Ruff Validator</div>
+                <div class="status-card">MyPy Validator</div>
+                <div class="status-card">Bandit Security</div>
+                <div class="status-card">Pytest Runtime</div>
+                <div class="status-card">Semgrep Analysis</div>
+                <div class="status-card">Dependency Scanner</div>
+            </div>
+        </div>
+
+        <div id="memory" class="panel" style="display:none;">
+            <h3>Long-Term Memory</h3>
+
+            <div class="log-window" id="memoryLogs">
+Persistent execution memory initialized...
+Repository learning engine active...
+Failure pattern tracking active...
+Recursive improvement active...
+            </div>
+        </div>
+
+        <div id="swarm" class="panel" style="display:none;">
+            <h3>Swarm Intelligence Monitor</h3>
+
+            <div class="status-grid">
+                <div class="status-card">Architect Agents: 4</div>
+                <div class="status-card">Coder Agents: 12</div>
+                <div class="status-card">Repair Agents: 5</div>
+                <div class="status-card">Testing Agents: 8</div>
+                <div class="status-card">Security Agents: 3</div>
+                <div class="status-card">Memory Agents: 2</div>
+            </div>
+        </div>
+
+        <div id="deploy" class="panel" style="display:none;">
+            <h3>Deployment Engine</h3>
+
+            <div class="input-group">
+                <label>Environment</label>
+                <select id="deployTarget">
+                    <option>Docker</option>
+                    <option>Kubernetes</option>
+                    <option>Ubuntu Server</option>
+                    <option>Windows Server</option>
+                </select>
+            </div>
+
+            <button class="action-btn" onclick="deploySystem()">
+                Deploy System
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<div class="footer">
+    StormCore SI Autonomous Swarm Intelligence Platform
+</div>
+
+<script>
+const panels = [
+    'dashboard',
+    'repository',
+    'chat',
+    'validators',
+    'memory',
+    'swarm',
+    'deploy'
+];
+
+function switchPanel(panelId) {
+    panels.forEach(panel => {
+        document.getElementById(panel).style.display = 'none';
+    });
+
+    document.getElementById(panelId).style.display = 'block';
+}
+
+async function startRepositoryCompletion() {
+    const repo = document.getElementById('repoUrl').value;
+    const objective = document.getElementById('objective').value;
+    const logs = document.getElementById('buildLogs');
+
+    logs.innerHTML += '
+[BOOT] Starting StormCore Repository Completion...';
+    logs.innerHTML += `
+[TARGET] ${repo}`;
+    logs.innerHTML += `
+[OBJECTIVE] ${objective}`;
+    logs.innerHTML += '
+[SWARM] Initializing agents...';
+    logs.innerHTML += '
+[VALIDATORS] Loading validation engines...';
+    logs.innerHTML += '
+[MEMORY] Loading long-term memory...';
+    logs.innerHTML += '
+[EXECUTION] Repository completion active...';
+
+    try {
+        const response = await fetch('http://localhost:8000/complete', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                repo_path: repo,
+                objective: objective
+            })
+        });
+
+        const result = await response.json();
+
+        logs.innerHTML += '
+[SUCCESS] Repository processing completed';
+        logs.innerHTML += `
+${JSON.stringify(result, null, 2)}`;
     }
-  </script>
+    catch(error) {
+        logs.innerHTML += `
+[ERROR] ${error.message}`;
+    }
+}
+
+async function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const chatBox = document.getElementById('chatBox');
+
+    const message = input.value;
+
+    if (!message) {
+        return;
+    }
+
+    chatBox.innerHTML += `
+        <div class="chat-message user-message">
+            ${message}
+        </div>
+    `;
+
+    input.value = '';
+
+    const aiResponse = generateAIResponse(message);
+
+    setTimeout(() => {
+        chatBox.innerHTML += `
+            <div class="chat-message ai-message">
+                ${aiResponse}
+            </div>
+        `;
+
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }, 500);
+}
+
+function generateAIResponse(message) {
+    const lower = message.toLowerCase();
+
+    if (lower.includes('build')) {
+        return 'StormCore swarm initialized repository build execution.';
+    }
+
+    if (lower.includes('repair')) {
+        return 'Repair agents activated. Scanning repository corruption.';
+    }
+
+    if (lower.includes('memory')) {
+        return 'Long-term memory systems active and synchronized.';
+    }
+
+    return 'StormCore SI processed your request successfully.';
+}
+
+async function deploySystem() {
+    const target = document.getElementById('deployTarget').value;
+
+    alert(`Deployment initialized for ${target}`);
+}
+</script>
+
 </body>
 </html>
