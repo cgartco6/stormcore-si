@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+pydantic
+gitpython
+pytest
+ruff
+mypy
+bandit
+loguru
+python-dotenv
