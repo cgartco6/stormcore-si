@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>StormCore SI</title>
+  <style>
+    body {
+      background: #0d1117;
+      color: white;
+      font-family: Arial;
+      padding: 40px;
+    }
+
+    input, button {
+      padding: 12px;
+      width: 400px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>StormCore SI Builder</h1>
+
+  <input id="repo" placeholder="GitHub Repository Path">
+
+  <br>
+
+  <button onclick="runBuild()">Complete Repository</button>
+
+  <pre id="output"></pre>
+
+  <script>
+    async function runBuild() {
+      const repo = document.getElementById('repo').value;
+
+      const response = await fetch('http://localhost:8000/complete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ repo_path: repo })
+      });
+
+      const data = await response.json();
+
+      document.getElementById('output').innerText = JSON.stringify(data, null, 2);
+    }
+  </script>
+</body>
+</html>
