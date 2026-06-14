@@ -1,0 +1,14 @@
+{
+  "project_name": "Sovereign_Engine",
+  "modules": [
+    {
+      "module_name": "01_builder",
+      "files": [
+        {
+          "path": "builder/orchestrator.py",
+          "purpose": "Reads this blueprint and calls the API to generate subsequent files linearly."
+        }
+      ]
+    }
+  ]
+}
