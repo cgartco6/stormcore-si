@@ -1,0 +1,15 @@
+We are building a local Python-based Meta-Builder script (builder.py). 
+Its only job is to read a JSON system blueprint and systematically generate full, individual code files without placeholders.
+
+Absolute Rules for this response:
+1. Provide the complete, production-grade source code for `builder.py`.
+2. Do not use ANY placeholders, comments like `# implement here`, or missing code blocks.
+3. Use simple, native libraries (like `os` and `json`) and direct API calls so there is zero environment bloat.
+
+The script must:
+- Load a `blueprint.json` file.
+- Loop through the modules and files defined inside it.
+- Send a precise prompt to the API for each file, demanding the full code.
+- Write the exact response directly to the specified file path, creating directories automatically.
+
+Generate the full, unabridged code for `builder.py` now.
